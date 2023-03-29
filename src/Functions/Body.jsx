@@ -40,7 +40,7 @@ function Body(props) {
     ).subscribe({
       next: (eventData) => {
         if (!camContext.init) {
-          console.log("cmeId: " + props.camId + " initilizing...");
+          console.log("cmeId:" + props.camId + " initilizing...");
           return;
         }
         const data = eventData.value.data.onUpdateShelfMonitor;

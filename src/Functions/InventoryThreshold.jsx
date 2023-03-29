@@ -38,7 +38,7 @@ function InventoryThreshold(props) {
   async function getThreshold() {
     try {
       if (!camContext.init) {
-        console.log("cmeId: " + props.camId + " initilizing...");
+        console.log("cmeId:" + props.camId + " initilizing...");
         return;
       }
       const threshold = await API.graphql(
@@ -61,7 +61,7 @@ function InventoryThreshold(props) {
   }
 
   async function putThreshold(threshold) {
-    console.log("cmeId: " + props.camId + "threshold: " + threshold);
+    console.log("cmeId:" + props.camId + " threshold:" + threshold);
     try {
       await API.graphql(
         graphqlOperation(updateShelfMonitor, {
