@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,6 +14,7 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { getShelfMonitor } from "../graphql/queries";
 import { updateShelfMonitor, createShelfMonitor } from "../graphql/mutations";
+import { CamContext } from "../App";
 
 Amplify.configure(awsconfig);
 
@@ -27,16 +28,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function InventoryThreshold() {
+function InventoryThreshold(props) {
   const classes = useStyles();
   const productType = "BOTTLE";
 
   const [thresholdState, setThreshold] = React.useState({ threshold: "" });
+  const camContext = useContext(CamContext);
 
   async function getThreshold() {
     try {
+      if (!camContext.init) {
+        console.log("cmeId: " + props.camId + " initilizing...");
+        return;
+      }
       const threshold = await API.graphql(
         graphqlOperation(getShelfMonitor, {
+          StreamUri: camContext.camUris[props.camId],
           ProductType: productType,
         }),
       );
@@ -54,11 +61,12 @@ function InventoryThreshold() {
   }
 
   async function putThreshold(threshold) {
-    console.log(threshold);
+    console.log("cmeId: " + props.camId + "threshold: " + threshold);
     try {
       await API.graphql(
         graphqlOperation(updateShelfMonitor, {
           input: {
+            StreamUri: camContext.camUris[props.camId],
             ProductType: productType,
             Threshold: threshold,
             s3Uri: "./default.png",
@@ -73,6 +81,7 @@ function InventoryThreshold() {
         await API.graphql(
           graphqlOperation(createShelfMonitor, {
             input: {
+              StreamUri: camContext.camUris[props.camId],
               ProductType: productType,
               Threshold: threshold,
             },
@@ -86,7 +95,7 @@ function InventoryThreshold() {
 
   useEffect(() => {
     getThreshold();
-  }, []);
+  }, [camContext]);
 
   const handleChange = (event) => {
     setThreshold({ threshold: event.target.value });

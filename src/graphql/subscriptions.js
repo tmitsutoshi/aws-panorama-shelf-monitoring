@@ -8,6 +8,7 @@ export const onCreateShelfMonitor = /* GraphQL */ `
       count
       ProductType
       Threshold
+      StreamUri
       createdAt
       updatedOn
     }
@@ -20,6 +21,7 @@ export const onUpdateShelfMonitor = /* GraphQL */ `
       count
       ProductType
       Threshold
+      StreamUri
       createdAt
       updatedOn
     }
@@ -32,6 +34,7 @@ export const onDeleteShelfMonitor = /* GraphQL */ `
       count
       ProductType
       Threshold
+      StreamUri
       createdAt
       updatedOn
     }
