@@ -7,7 +7,7 @@ gql_client = gql_resource.client()
 
 
 gql_query = """
-mutation MyMutation($s3Uri: String, $ProductType: ProductType = BOTTLE, $count: Int) {
+mutation MyMutation($s3Uri: String, $StreamUri: String!, $ProductType: ProductType = BOTTLE, $count: Int) {
   updateShelfMonitor(input: {s3Uri: $s3Uri, StreamUri: $StreamUri, ProductType: $ProductType, count: $count}) {
       count
       Threshold
@@ -21,8 +21,8 @@ mutation MyMutation($s3Uri: String, $ProductType: ProductType = BOTTLE, $count: 
 """
 
 create_bottle_query = """
-mutation MyMutation($s3Uri: String, $ProductType: ProductType = BOTTLE, $Threshold: 3, $count: Int) {
-    createShelfMonitor(input: {s3Uri: $s3Uri, StreamUri: $StreamUri, ProductType: $ProductType, count: $count}) {
+mutation MyMutation($s3Uri: String, $StreamUri: String!, $ProductType: ProductType = BOTTLE, $Threshold: Int = 3, $count: Int) {
+    createShelfMonitor(input: {s3Uri: $s3Uri, StreamUri: $StreamUri, ProductType: $ProductType, Threshold: $Threshold, count: $count}) {
         count
         Threshold
         s3Uri
@@ -67,3 +67,4 @@ def handler(event, context):
                 raise ee
 
     return
+
