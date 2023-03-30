@@ -39,6 +39,7 @@ function Body(props) {
       graphqlOperation(onUpdateShelfMonitor),
     ).subscribe({
       next: (eventData) => {
+        console.log(!camContext.init);
         if (!camContext.init) {
           console.log("cmeId:" + props.camId + " initilizing...");
           return;
