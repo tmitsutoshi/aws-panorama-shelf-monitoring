@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
 import React, { createContext, useEffect, useState } from "react";
-import { Header, Body, InventoryThreshold } from "./Functions";
+import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { onUpdateShelfMonitor } from "./graphql/subscriptions";
@@ -20,16 +20,16 @@ Amplify.configure(awsconfig);
 
 export const CamContext = createContext();
 
+
 function App() {
 
   const initialState = {
     init: false,
     camUris: [],
   };
-  const [camValue, setCamValue] = useState(initialState);
-
+  const [camUris, setCamUris] = useState([]);
   const CamSize = 2;
-  const camUriSet = new Set();
+  const tmpCamUriSet = new Set();
 
   useEffect(() => {
     const subscription = API.graphql(
@@ -41,16 +41,13 @@ function App() {
         if (data.StreamUri === null) {
           console.log("StreamUri is null");
         }
-        camUriSet.add(data.StreamUri);
-        console.log(camUriSet.size);
-        console.log(CamSize);
-        if (camUriSet.size == CamSize){
-          const val = {
-            init: true,
-            camUris: Array.from(camUriSet),  
-          };
-          console.log(val);
-          setCamValue(val);
+
+        tmpCamUriSet.add(data.StreamUri);
+        setCamUris(Array.from(tmpCamUriSet));
+
+        if (tmpCamUriSet.size >>= CamSize){
+          console.log("unsubscribe");
+          subscription.unsubscribe();
         }
       },
     });
@@ -61,9 +58,14 @@ function App() {
     <div>
       <Grid container justify="center" alignItems="stretch" spacing={3} xs={12}>
         <Header />
-        <CamContext.Provider value={camValue}>
-          <Body camId={0} />
-          <InventoryThreshold camId={0}/>
+        <CamContext.Provider value={camUris}>
+          {
+            camUris.map((uri, idx) => {
+              return(
+                <StreamView camId={idx} camUri={uri} />
+              )
+            })
+          }
         </CamContext.Provider>
       </Grid>
     </div>

@@ -7,7 +7,6 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, InputLabel } from "@material-ui/core";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
@@ -33,17 +32,12 @@ function InventoryThreshold(props) {
   const productType = "BOTTLE";
 
   const [thresholdState, setThreshold] = React.useState({ threshold: "" });
-  const camContext = useContext(CamContext);
 
   async function getThreshold() {
     try {
-      if (!camContext.init) {
-        console.log("cmeId:" + props.camId + " initilizing...");
-        return;
-      }
       const threshold = await API.graphql(
         graphqlOperation(getShelfMonitor, {
-          StreamUri: camContext.camUris[props.camId],
+          StreamUri: props.camUri,
           ProductType: productType,
         }),
       );
@@ -61,12 +55,12 @@ function InventoryThreshold(props) {
   }
 
   async function putThreshold(threshold) {
-    console.log("cmeId:" + props.camId + " threshold:" + threshold);
+    console.log("cmeId:" + props.camUri + " threshold:" + threshold);
     try {
       await API.graphql(
         graphqlOperation(updateShelfMonitor, {
           input: {
-            StreamUri: camContext.camUris[props.camId],
+            StreamUri: props.camUri,
             ProductType: productType,
             Threshold: threshold,
             s3Uri: "./default.png",
@@ -81,7 +75,7 @@ function InventoryThreshold(props) {
         await API.graphql(
           graphqlOperation(createShelfMonitor, {
             input: {
-              StreamUri: camContext.camUris[props.camId],
+              StreamUri: props.camUri,
               ProductType: productType,
               Threshold: threshold,
             },
@@ -95,7 +89,7 @@ function InventoryThreshold(props) {
 
   useEffect(() => {
     getThreshold();
-  }, [camContext]);
+  }, []);
 
   const handleChange = (event) => {
     setThreshold({ threshold: event.target.value });
@@ -104,12 +98,8 @@ function InventoryThreshold(props) {
   };
 
   return (
-    <Grid item xs={5}>
+    <Grid item xs={12}>
       <Paper>
-        <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
-          Specify how low the item count should be before you get notified of a
-          low inventory.
-        </Typography>
         <Box display="flex" justifyContent="center">
           <FormControl className={classes.formControl}>
             <InputLabel style={{ fontSize: 20, color: "#FF9900" }}>
