@@ -60,7 +60,7 @@ function Body(props) {
       },
     });
     return () => subscription.unsubscribe();
-  }, [camContext]);
+  }, []);
 
   return (
     <Grid item xs={5}>
