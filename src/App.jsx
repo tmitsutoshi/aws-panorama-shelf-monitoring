@@ -38,10 +38,10 @@ function App() {
       next: (eventData) => {
         const data = eventData.value.data.onUpdateShelfMonitor;
         console.log(data);
-        if (data.StreamUris === null) {
-          console.log("StreamUris is null");
+        if (data.StreamUri === null) {
+          console.log("StreamUri is null");
         }
-        camUriSet.add(data.StreamUris);
+        camUriSet.add(data.StreamUri);
         console.log(camUriSet.size);
         console.log(CamSize);
         if (camUriSet.size == CamSize){
