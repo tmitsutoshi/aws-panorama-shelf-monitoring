@@ -42,11 +42,15 @@ function App() {
           console.log("StreamUris is null");
         }
         camUriSet.add(data.StreamUris);
+        console.log(camUriSet.size);
+        console.log(CamSize);
         if (camUriSet.size == CamSize){
-          setCamValue({
+          const val = {
             init: true,
-            camUris: Array.from(camUriSet),
-          });
+            camUris: Array.from(camUriSet),  
+          };
+          console.log(val);
+          setCamValue(val);
         }
       },
     });
