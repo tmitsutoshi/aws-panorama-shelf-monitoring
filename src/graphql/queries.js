@@ -2,12 +2,13 @@
 // this is an auto generated file. This will be overwritten
 
 export const getShelfMonitor = /* GraphQL */ `
-  query GetShelfMonitor($ProductType: ProductType!) {
-    getShelfMonitor(ProductType: $ProductType) {
+  query GetShelfMonitor($StreamUri: String!) {
+    getShelfMonitor(StreamUri: $StreamUri) {
       s3Uri
       count
       ProductType
       Threshold
+      StreamUri
       createdAt
       updatedOn
     }
@@ -15,14 +16,14 @@ export const getShelfMonitor = /* GraphQL */ `
 `;
 export const listShelfMonitors = /* GraphQL */ `
   query ListShelfMonitors(
-    $ProductType: ProductType
+    $StreamUri: String
     $filter: ModelshelfMonitorFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
     listShelfMonitors(
-      ProductType: $ProductType
+      StreamUri: $StreamUri
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -33,6 +34,7 @@ export const listShelfMonitors = /* GraphQL */ `
         count
         ProductType
         Threshold
+        StreamUri
         createdAt
         updatedOn
       }
