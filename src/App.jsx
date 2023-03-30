@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
 import React, { createContext, useEffect, useState } from "react";
-import { Header, Body, InventoryThreshold } from "./Functions";
+import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { onUpdateShelfMonitor } from "./graphql/subscriptions";
@@ -44,7 +44,7 @@ function App() {
         camUriSet.add(data.StreamUri);
         console.log(camUriSet.size);
         console.log(CamSize);
-        if (camUriSet.size == CamSize){
+        if (camUriSet.size === CamSize){
           const val = {
             init: true,
             camUris: Array.from(camUriSet),  
@@ -62,8 +62,8 @@ function App() {
       <Grid container justify="center" alignItems="stretch" spacing={3} xs={12}>
         <Header />
         <CamContext.Provider value={camValue}>
-          <Body camId={0} />
-          <InventoryThreshold camId={0}/>
+          <StreamView camId={0} />
+          <StreamView camId={1} />
         </CamContext.Provider>
       </Grid>
     </div>

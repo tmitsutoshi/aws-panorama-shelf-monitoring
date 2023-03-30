@@ -7,7 +7,6 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, InputLabel } from "@material-ui/core";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
@@ -104,12 +103,8 @@ function InventoryThreshold(props) {
   };
 
   return (
-    <Grid item xs={5}>
+    <Grid item xs={12}>
       <Paper>
-        <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
-          Specify how low the item count should be before you get notified of a
-          low inventory.
-        </Typography>
         <Box display="flex" justifyContent="center">
           <FormControl className={classes.formControl}>
             <InputLabel style={{ fontSize: 20, color: "#FF9900" }}>

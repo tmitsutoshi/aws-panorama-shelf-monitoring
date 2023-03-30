@@ -11,7 +11,6 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { onUpdateShelfMonitor } from "../graphql/subscriptions";
 import { CamContext } from "../App";
-import { RepeatRounded } from "@material-ui/icons";
 
 Amplify.configure(awsconfig);
 
@@ -35,15 +34,16 @@ function Body(props) {
   const camContext = useContext(CamContext);
 
   useEffect(() => {
+    if (!camContext.init) {
+      console.log("cmeId:" + props.camId + " initilizing...");
+      return;
+    }
     const subscription = API.graphql(
       graphqlOperation(onUpdateShelfMonitor),
     ).subscribe({
       next: (eventData) => {
         console.log(!camContext.init);
-        if (!camContext.init) {
-          console.log("cmeId:" + props.camId + " initilizing...");
-          return;
-        }
+        
         const data = eventData.value.data.onUpdateShelfMonitor;
         if (data.StreamUri !== camContext.camUris[props.camId]){
           return;
@@ -61,13 +61,13 @@ function Body(props) {
       },
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [camContext]);
 
   return (
-    <Grid item xs={5}>
+    <Grid item xs={12}>
       <Paper>
         <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
-          Shelf Display {shelf.StreamUri}
+          Shelf Display : Camera {props.camId + 1}
         </Typography>
         <img src={shelf.s3Uri} alt="Detections" className={classes.image} />
 
