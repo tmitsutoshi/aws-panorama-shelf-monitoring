@@ -47,7 +47,6 @@ function App() {
             init: true,
             camUris: Array.from(camUriSet),
           });
-          subscription.unsubscribe();
         }
       },
     });
