@@ -13,7 +13,6 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { getShelfMonitor } from "../graphql/queries";
 import { updateShelfMonitor, createShelfMonitor } from "../graphql/mutations";
-import { CamContext } from "../App";
 
 Amplify.configure(awsconfig);
 

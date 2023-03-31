@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 // import GridList from '@material-ui/core/GridList';
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -18,18 +18,13 @@ import { onUpdateShelfMonitor } from "./graphql/subscriptions";
 
 Amplify.configure(awsconfig);
 
-export const CamContext = createContext();
-
-
 function App() {
 
   const initialState = {
-    init: false,
-    camUris: [],
+    uris: [],
   };
-  const [camUris, setCamUris] = useState([]);
+  const [camUris, setCamUris] = useState(initialState);
   const CamSize = 2;
-  const tmpCamUriSet = new Set();
 
   useEffect(() => {
     const subscription = API.graphql(
@@ -42,13 +37,14 @@ function App() {
           console.log("StreamUri is null");
         }
 
-        const oldSize = tmpCamUriSet.size;
+        const tmpCamUriSet = new Set(camUris.uris);
         tmpCamUriSet.add(data.StreamUri);
-        if (oldSize === tmpCamUriSet.size) {
+        if (camUris.uris.length === tmpCamUriSet.size) {
           console.log("StreamUriList not changed.");
           return;
         }
-        setCamUris([...camUris, data.StreamUri]);
+        camUris.uris.push(data.StreamUri)
+        setCamUris(camUris);
 
         if (tmpCamUriSet.size >= CamSize){
           console.log("unsubscribe");
@@ -63,15 +59,13 @@ function App() {
     <div>
       <Grid container justify="center" alignItems="stretch" spacing={3} xs={12}>
         <Header />
-        <CamContext.Provider value={camUris}>
           {
-            camUris.map((uri, idx) => {
+            camUris.uris.map((uri, idx) => {
               return(
                 <StreamView camId={idx} camUri={uri} />
               )
             })
           }
-        </CamContext.Provider>
       </Grid>
     </div>
   );
