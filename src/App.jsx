@@ -42,8 +42,13 @@ function App() {
           console.log("StreamUri is null");
         }
 
+        const oldSize = tmpCamUriSet.size;
         tmpCamUriSet.add(data.StreamUri);
-        setCamUris(Array.from(tmpCamUriSet));
+        if (oldSize === tmpCamUriSet.size) {
+          console.log("StreamUriList not changed.");
+          return;
+        }
+        setCamUris([...camUris, data.StreamUri]);
 
         if (tmpCamUriSet.size >= CamSize){
           console.log("unsubscribe");
