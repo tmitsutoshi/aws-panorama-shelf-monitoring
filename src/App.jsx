@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 // import GridList from '@material-ui/core/GridList';
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect } from "react";
 import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -22,8 +22,8 @@ export const StreamContext = createContext();
 
 function App() {
 
-  const [streamUris, setStreamUris] = useState([]);
   const CamSize = 2;
+  const streamUris = [];
 
   useEffect(() => {
     const subscription = API.graphql(
@@ -36,16 +36,16 @@ function App() {
           console.log("StreamUri is null");
         }
 
-        const tmpstreamUriset = new Set(streamUris);
-        tmpstreamUriset.add(data.StreamUri);
-        if (streamUris.length === tmpstreamUriset.size) {
-          console.log("StreamUriList not changed.");
+        const streamUriSet = new Set([...streamUris, data.StreamUri]);
+        if (streamUris.length === streamUriSet.size) {
+          console.log("no need to update stream uris list.");
           return;
         }
-        setStreamUris((prevState) => ([...prevState, data.StreamUri]));
 
-        if (tmpstreamUriset.size >= CamSize){
-          console.log("App Unsubscribe.");
+        streamUris.push(data.StreamUri);
+
+        if (streamUriSet.size >= CamSize){
+          console.log("unsubscribe app component.");
           subscription.unsubscribe();
         }
       },
@@ -61,7 +61,7 @@ function App() {
           {
             [...Array(CamSize)].map((v, i) => {
               return(
-                <StreamView streamId={i} />
+                <StreamView key={i} streamId={i} />
               )
             })
           }

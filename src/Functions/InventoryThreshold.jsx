@@ -36,7 +36,7 @@ function InventoryThreshold(props) {
 
   async function getThreshold() {
     try {
-      if (streamUris.length > props.streamId) 
+      if (streamUris.length <= props.streamId) 
         return ;
 
       const threshold = await API.graphql(
@@ -59,7 +59,7 @@ function InventoryThreshold(props) {
   }
 
   async function putThreshold(threshold) {
-    if (streamUris.length > props.streamId) 
+    if (streamUris.length <= props.streamId) 
         return ;
 
     console.log("cmeId:" + props.camUri + " threshold:" + threshold);

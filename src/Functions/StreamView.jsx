@@ -11,8 +11,8 @@ function StreamView(props) {
 
     return (
         <Grid container item xs={5} spacing={1}>
-            <Body camId={props.streamId}/>
-            <InventoryThreshold camId={props.streamId}/>
+            <Body streamId={props.streamId}/>
+            <InventoryThreshold streamId={props.streamId}/>
         </Grid>
     );
 }

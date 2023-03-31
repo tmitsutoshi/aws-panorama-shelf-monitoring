@@ -38,7 +38,7 @@ function Body(props) {
       graphqlOperation(onUpdateShelfMonitor),
     ).subscribe({
       next: (eventData) => {
-        if (streamUris.length > props.streamId) 
+        if (streamUris.length <= props.streamId) 
           return ;
         
         const streamUri = streamUris[props.streamId];
@@ -65,7 +65,7 @@ function Body(props) {
     <Grid item xs={12}>
       <Paper>
         <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
-          Shelf Display : Camera {props.camId + 1}
+          Shelf Display : Camera {props.streamId + 1}
         </Typography>
         <img src={shelf.s3Uri} alt="Detections" className={classes.image} />
 
