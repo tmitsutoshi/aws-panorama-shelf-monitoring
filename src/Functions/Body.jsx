@@ -5,11 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { onUpdateShelfMonitor } from "../graphql/subscriptions";
+import { StreamContext } from "../App";
 
 Amplify.configure(awsconfig);
 
@@ -30,19 +31,24 @@ function Body(props) {
     count: "",
   };
   const [shelf, setShelf] = useState(initialState);
+  const streamContext = useContext(StreamContext);
 
   useEffect(() => {
     const subscription = API.graphql(
       graphqlOperation(onUpdateShelfMonitor),
     ).subscribe({
       next: (eventData) => {
+        if (streamContext.streamUris.length > props.streamId) 
+          return ;
+        
+        const streamUri = streamContext.streamUris[props.streamId];
         const data = eventData.value.data.onUpdateShelfMonitor;
-        if (data.StreamUri !== props.camUri){
+        if (data.StreamUri !== streamUri){
           return;
         }
         console.log(data);
         if (data.s3Uri === null) {
-          console.log("cmeId: " + props.camId + "null");
+          console.log("streamUri: " + props.streamUri + "null");
         }
         setShelf({
           ...shelf,

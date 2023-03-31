@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 // import GridList from '@material-ui/core/GridList';
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -18,12 +18,11 @@ import { onUpdateShelfMonitor } from "./graphql/subscriptions";
 
 Amplify.configure(awsconfig);
 
+export const StreamContext = createContext();
+
 function App() {
 
-  const initialState = {
-    uris: [],
-  };
-  const [camUris, setCamUris] = useState(initialState);
+  const [streamUris, setStreamUris] = useState([]);
   const CamSize = 2;
 
   useEffect(() => {
@@ -37,17 +36,16 @@ function App() {
           console.log("StreamUri is null");
         }
 
-        const tmpCamUriSet = new Set(camUris.uris);
-        tmpCamUriSet.add(data.StreamUri);
-        if (camUris.uris.length === tmpCamUriSet.size) {
+        const tmpstreamUriset = new Set(streamUris);
+        tmpstreamUriset.add(data.StreamUri);
+        if (streamUris.length === tmpstreamUriset.size) {
           console.log("StreamUriList not changed.");
           return;
         }
-        camUris.uris.push(data.StreamUri)
-        setCamUris(camUris);
+        setStreamUris((prevState) => ([...prevState, data.StreamUri]));
 
-        if (tmpCamUriSet.size >= CamSize){
-          console.log("unsubscribe");
+        if (tmpstreamUriset.size >= CamSize){
+          console.log("App Unsubscribe.");
           subscription.unsubscribe();
         }
       },
@@ -59,13 +57,15 @@ function App() {
     <div>
       <Grid container justify="center" alignItems="stretch" spacing={3} xs={12}>
         <Header />
+        <StreamContext.Provider value={streamUris}>
           {
-            camUris.uris.map((uri, idx) => {
+            [...Array(CamSize)].map((v, i) => {
               return(
-                <StreamView camId={idx} camUri={uri} />
+                <StreamView streamId={i} />
               )
             })
           }
+        </StreamContext.Provider>
       </Grid>
     </div>
   );

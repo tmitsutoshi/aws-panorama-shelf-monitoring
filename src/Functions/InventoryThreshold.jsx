@@ -13,6 +13,7 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { getShelfMonitor } from "../graphql/queries";
 import { updateShelfMonitor, createShelfMonitor } from "../graphql/mutations";
+import { StreamContext } from "../App";
 
 Amplify.configure(awsconfig);
 
@@ -31,12 +32,16 @@ function InventoryThreshold(props) {
   const productType = "BOTTLE";
 
   const [thresholdState, setThreshold] = React.useState({ threshold: "" });
+  const streamContext = useContext(StreamContext);
 
   async function getThreshold() {
     try {
+      if (streamContext.streamUris.length > props.streamId) 
+        return ;
+
       const threshold = await API.graphql(
         graphqlOperation(getShelfMonitor, {
-          StreamUri: props.camUri,
+          StreamUri: streamContext.streamUris[props.streamId],
           ProductType: productType,
         }),
       );
@@ -54,6 +59,9 @@ function InventoryThreshold(props) {
   }
 
   async function putThreshold(threshold) {
+    if (streamContext.streamUris.length > props.streamId) 
+        return ;
+        
     console.log("cmeId:" + props.camUri + " threshold:" + threshold);
     try {
       await API.graphql(
@@ -88,7 +96,7 @@ function InventoryThreshold(props) {
 
   useEffect(() => {
     getThreshold();
-  }, []);
+  }, [streamContext]);
 
   const handleChange = (event) => {
     setThreshold({ threshold: event.target.value });
