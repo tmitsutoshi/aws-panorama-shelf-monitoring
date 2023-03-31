@@ -45,7 +45,7 @@ function App() {
         tmpCamUriSet.add(data.StreamUri);
         setCamUris(Array.from(tmpCamUriSet));
 
-        if (tmpCamUriSet.size >>= CamSize){
+        if (tmpCamUriSet.size >= CamSize){
           console.log("unsubscribe");
           subscription.unsubscribe();
         }
