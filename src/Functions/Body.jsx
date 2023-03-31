@@ -31,17 +31,17 @@ function Body(props) {
     count: "",
   };
   const [shelf, setShelf] = useState(initialState);
-  const streamContext = useContext(StreamContext);
+  const streamUris = useContext(StreamContext);
 
   useEffect(() => {
     const subscription = API.graphql(
       graphqlOperation(onUpdateShelfMonitor),
     ).subscribe({
       next: (eventData) => {
-        if (streamContext.streamUris.length > props.streamId) 
+        if (streamUris.length > props.streamId) 
           return ;
         
-        const streamUri = streamContext.streamUris[props.streamId];
+        const streamUri = streamUris[props.streamId];
         const data = eventData.value.data.onUpdateShelfMonitor;
         if (data.StreamUri !== streamUri){
           return;

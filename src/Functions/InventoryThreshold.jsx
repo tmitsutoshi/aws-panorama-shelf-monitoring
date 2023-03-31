@@ -32,16 +32,16 @@ function InventoryThreshold(props) {
   const productType = "BOTTLE";
 
   const [thresholdState, setThreshold] = React.useState({ threshold: "" });
-  const streamContext = useContext(StreamContext);
+  const streamUris = useContext(StreamContext);
 
   async function getThreshold() {
     try {
-      if (streamContext.streamUris.length > props.streamId) 
+      if (streamUris.length > props.streamId) 
         return ;
 
       const threshold = await API.graphql(
         graphqlOperation(getShelfMonitor, {
-          StreamUri: streamContext.streamUris[props.streamId],
+          StreamUri: streamUris[props.streamId],
           ProductType: productType,
         }),
       );
@@ -59,9 +59,9 @@ function InventoryThreshold(props) {
   }
 
   async function putThreshold(threshold) {
-    if (streamContext.streamUris.length > props.streamId) 
+    if (streamUris.length > props.streamId) 
         return ;
-        
+
     console.log("cmeId:" + props.camUri + " threshold:" + threshold);
     try {
       await API.graphql(
@@ -96,7 +96,7 @@ function InventoryThreshold(props) {
 
   useEffect(() => {
     getThreshold();
-  }, [streamContext]);
+  }, [streamUris]);
 
   const handleChange = (event) => {
     setThreshold({ threshold: event.target.value });
