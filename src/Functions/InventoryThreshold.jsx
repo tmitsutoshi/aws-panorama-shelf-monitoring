@@ -61,13 +61,13 @@ function InventoryThreshold(props) {
   async function putThreshold(threshold) {
     if (streamUris.length <= props.streamId) 
         return ;
-
-    console.log("cmeId:" + props.camUri + " threshold:" + threshold);
+    const streamUri = streamUris[props.streamId];
+    console.log("cmeId:" + props.streamId + " threshold:" + threshold);
     try {
       await API.graphql(
         graphqlOperation(updateShelfMonitor, {
           input: {
-            StreamUri: props.camUri,
+            StreamUri: streamUri,
             ProductType: productType,
             Threshold: threshold,
             s3Uri: "./default.png",
@@ -82,7 +82,7 @@ function InventoryThreshold(props) {
         await API.graphql(
           graphqlOperation(createShelfMonitor, {
             input: {
-              StreamUri: props.camUri,
+              StreamUri: streamUri,
               ProductType: productType,
               Threshold: threshold,
             },
