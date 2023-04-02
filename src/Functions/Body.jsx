@@ -42,17 +42,14 @@ function Body(props) {
       graphqlOperation(onUpdateShelfMonitor),
     ).subscribe({
       next: (eventData) => {
-        if (streamUris.length <= props.streamId) 
-          return ;
-        
-        const streamUri = streamUris[props.streamId];
         const data = eventData.value.data.onUpdateShelfMonitor;
-        if (data.StreamUri !== streamUri){
+        if (data.StreamUri !== props.streamUri){
           return;
         }
         console.log(data);
         if (data.s3Uri === null) {
           console.log("streamUri: " + props.streamUri + "null");
+          return;
         }
 
         const alert = checkAlert(data.count, data.Threshold);

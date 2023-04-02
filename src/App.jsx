@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 // import GridList from '@material-ui/core/GridList';
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useReducer } from "react";
 import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -23,7 +23,7 @@ export const StreamContext = createContext();
 function App() {
 
   const CamSize = 2;
-  const streamUris = [];
+  const [streamUris, dispatch] = useReducer(reducer, [])
 
   useEffect(() => {
     const subscription = API.graphql(
@@ -31,27 +31,30 @@ function App() {
     ).subscribe({
       next: (eventData) => {
         const data = eventData.value.data.onUpdateShelfMonitor;
-        console.log(data);
-        if (data.StreamUri === null) {
-          console.log("StreamUri is null");
-        }
-
-        const streamUriSet = new Set([...streamUris, data.StreamUri]);
-        if (streamUris.length === streamUriSet.size) {
-          console.log("no need to update stream uris list.");
-          return;
-        }
-
-        streamUris.push(data.StreamUri);
-
-        if (streamUriSet.size >= CamSize){
-          console.log("unsubscribe app component.");
-          subscription.unsubscribe();
-        }
+        dispatch([data, subscription]);
       },
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  function reducer(state, [data, subscription]) {
+    console.log(data);
+    if (data.StreamUri === null) {
+      console.log("StreamUri is null");
+    }
+  
+    const streamUriSet = new Set([...state, data.StreamUri]);
+    if (state.length === streamUriSet.size) {
+      console.log("no need to update stream uris list.");
+      return;
+    }
+
+    if (streamUriSet.size >= CamSize) {
+      subscription.unsubscribe();
+    }
+  
+    return [...state, data.StreamUri];
+  }
 
   return (
     <div>
@@ -59,9 +62,9 @@ function App() {
         <Header />
         <StreamContext.Provider value={streamUris}>
           {
-            [...Array(CamSize)].map((v, i) => {
+            streamUris.map((v, i) => {
               return(
-                <StreamView key={i} streamId={i} />
+                <StreamView key={i} streamUri={v}/>
               )
             })
           }
