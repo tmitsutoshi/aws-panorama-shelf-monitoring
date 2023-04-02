@@ -10,15 +10,13 @@ import Grid from "@material-ui/core/Grid";
 // import GridList from '@material-ui/core/GridList';
 // import GridListTile from '@material-ui/core/GridListTile';
 // import LinearProgress from '@material-ui/core/LinearProgress';
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Header, StreamView } from "./Functions";
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { onUpdateShelfMonitor } from "./graphql/subscriptions";
 
 Amplify.configure(awsconfig);
-
-export const StreamContext = createContext();
 
 function App() {
 
@@ -42,7 +40,7 @@ function App() {
     if (data.StreamUri === null) {
       console.log("StreamUri is null");
     }
-  
+
     const streamUriSet = new Set([...state, data.StreamUri]);
     if (state.length === streamUriSet.size) {
       console.log("no need to update stream uris list.");
@@ -52,7 +50,7 @@ function App() {
     if (streamUriSet.size >= CamSize) {
       subscription.unsubscribe();
     }
-  
+
     return [...state, data.StreamUri];
   }
 
@@ -60,15 +58,13 @@ function App() {
     <div>
       <Grid container justify="center" alignItems="stretch" spacing={3} xs={12}>
         <Header />
-        <StreamContext.Provider value={streamUris}>
-          {
-            streamUris.map((v, i) => {
-              return(
-                <StreamView key={i} streamUri={v}/>
-              )
-            })
-          }
-        </StreamContext.Provider>
+        {
+          streamUris.map((v, i) => {
+            return (
+              <StreamView key={i} streamUri={v} />
+            )
+          })
+        }
       </Grid>
     </div>
   );

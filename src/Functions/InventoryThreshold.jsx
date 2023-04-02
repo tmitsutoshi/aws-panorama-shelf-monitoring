@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -13,7 +13,6 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { getShelfMonitor } from "../graphql/queries";
 import { updateShelfMonitor, createShelfMonitor } from "../graphql/mutations";
-import { StreamContext } from "../App";
 
 Amplify.configure(awsconfig);
 
@@ -32,7 +31,6 @@ function InventoryThreshold(props) {
   const productType = "BOTTLE";
 
   const [thresholdState, setThreshold] = React.useState({ threshold: "" });
-  const streamUris = useContext(StreamContext);
 
   async function getThreshold() {
     try {

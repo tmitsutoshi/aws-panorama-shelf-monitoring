@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/react-in-jsx-scope */
 import Grid from "@material-ui/core/Grid";
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 
 import { Body, InventoryThreshold } from ".";
 

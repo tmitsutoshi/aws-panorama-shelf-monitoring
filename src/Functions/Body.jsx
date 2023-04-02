@@ -5,12 +5,11 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Amplify, { API, graphqlOperation } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { onUpdateShelfMonitor } from "../graphql/subscriptions";
-import { StreamContext } from "../App";
 
 Amplify.configure(awsconfig);
 
@@ -35,7 +34,6 @@ function Body(props) {
     alert: false,
   };
   const [shelf, setShelf] = useState(initialState);
-  const streamUris = useContext(StreamContext);
 
   useEffect(() => {
     const subscription = API.graphql(
