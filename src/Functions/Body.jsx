@@ -54,25 +54,22 @@ function Body(props) {
         if (data.s3Uri === null) {
           console.log("streamUri: " + props.streamUri + "null");
         }
+
+        const alert = checkAlert(data.count, data.Threshold);
         setShelf({
           ...shelf,
           StreamUri: data.StreamUri,
           s3Uri: data.s3Uri,
           count: data.count,
+          alert: alert,
         });
-
-        checkAlert(data.count, data.Threshold);
       },
     });
     return () => subscription.unsubscribe();
   }, []);
 
-  async function checkAlert (count, threshold) {
-    const alert = (count !== 9000) && (count <= threshold);
-    setShelf({
-      ...shelf,
-      alert: alert
-    });
+  const checkAlert = (count, threshold) =>{
+      return alert = (count !== 9000) && (count <= threshold);
   }
 
   return (
