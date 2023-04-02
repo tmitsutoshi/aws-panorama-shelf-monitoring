@@ -20,6 +20,9 @@ const useStyles = makeStyles(() => ({
     height: "100%",
     margin: "auto",
   },
+  alert: {
+    backgroundColor: "#f00",
+  },
 }));
 
 function Body(props) {
@@ -29,6 +32,7 @@ function Body(props) {
     StreamUri: "",
     s3Uri: "./default.png",
     count: "",
+    alert: false,
   };
   const [shelf, setShelf] = useState(initialState);
   const streamUris = useContext(StreamContext);
@@ -56,14 +60,24 @@ function Body(props) {
           s3Uri: data.s3Uri,
           count: data.count,
         });
+
+        checkAlert(data.count, data.Threshold);
       },
     });
     return () => subscription.unsubscribe();
   }, []);
 
+  async function checkAlert (count, threshold) {
+    const alert = (count !== 9000) && (count <= threshold);
+    setShelf({
+      ...shelf,
+      alert: alert
+    });
+  }
+
   return (
     <Grid item xs={12}>
-      <Paper>
+      <Paper className={shelf.alert ? classes.alert : ""}>
         <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
           Shelf Display : Camera {props.streamId + 1}
         </Typography>

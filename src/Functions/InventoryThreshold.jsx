@@ -62,7 +62,7 @@ function InventoryThreshold(props) {
     if (streamUris.length <= props.streamId) 
         return ;
     const streamUri = streamUris[props.streamId];
-    console.log("cmeId:" + props.streamId + " threshold:" + threshold);
+    console.log("streamUri:" + streamUri + " threshold:" + threshold);
     try {
       await API.graphql(
         graphqlOperation(updateShelfMonitor, {
