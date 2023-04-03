@@ -20,7 +20,7 @@ Amplify.configure(awsconfig);
 
 function App() {
 
-  const CamSize = 2;
+  const StreamViewSize = 2;
   const [streamUris, dispatch] = useReducer(reducer, [])
 
   useEffect(() => {
@@ -44,10 +44,10 @@ function App() {
     const streamUriSet = new Set([...state, data.StreamUri]);
     if (state.length === streamUriSet.size) {
       console.log("no need to update stream uris list.");
-      return;
+      return state;
     }
 
-    if (streamUriSet.size >= CamSize) {
+    if (streamUriSet.size >= StreamViewSize) {
       subscription.unsubscribe();
     }
 
@@ -61,7 +61,7 @@ function App() {
         {
           streamUris.map((v, i) => {
             return (
-              <StreamView key={i} streamUri={v} />
+              <StreamView item xs={6} key={'sv-' + i} streamId={i} streamUri={v} />
             )
           })
         }

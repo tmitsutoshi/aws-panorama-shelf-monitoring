@@ -41,7 +41,7 @@ function Body(props) {
     ).subscribe({
       next: (eventData) => {
         const data = eventData.value.data.onUpdateShelfMonitor;
-        if (data.StreamUri !== props.streamUri){
+        if (data.StreamUri !== props.streamUri) {
           return;
         }
         console.log(data);
@@ -63,8 +63,8 @@ function Body(props) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkAlert = (count, threshold) =>{
-      return alert = (count !== 9000) && (count <= threshold);
+  const checkAlert = (count, threshold) => {
+    return alert = (count !== 9000) && (count <= threshold);
   }
 
   return (
@@ -73,6 +73,16 @@ function Body(props) {
         <Typography variant="h5" style={{ textAlign: "center", padding: 10 }}>
           Shelf Display : Camera {props.streamId + 1}
         </Typography>
+        <Typography variant="h4" style={{ textAlign: "center", padding: 1 }}>
+          {shelf.alert ? (
+            <em>
+              <span style={{ color: "#FFFF00" }}>在庫アラート!</span>
+            </em>
+          ) : (
+            <br/>
+          )}
+        </Typography>
+        <Typography></Typography>
         <img src={shelf.s3Uri} alt="Detections" className={classes.image} />
 
         <Typography variant="h5" style={{ padding: 10, textAlign: "center" }}>
