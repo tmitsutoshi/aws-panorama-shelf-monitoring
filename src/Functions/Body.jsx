@@ -51,13 +51,13 @@ function Body(props) {
         }
 
         const alert = checkAlert(data.count, data.Threshold);
-        setShelf({
-          ...shelf,
+        setShelf((prevState) => ({
+          ...prevState,
           StreamUri: data.StreamUri,
           s3Uri: data.s3Uri,
           count: data.count,
           alert: alert,
-        });
+        }));
       },
     });
     return () => subscription.unsubscribe();

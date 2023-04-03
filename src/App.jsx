@@ -56,12 +56,14 @@ function App() {
 
   return (
     <div>
-      <Grid container justify="center" alignItems="stretch" spacing={3} xs={12}>
+      <Grid container justifyContent="center" alignItems="stretch" spacing={3} >
         <Header />
         {
           streamUris.map((v, i) => {
             return (
-              <StreamView item xs={6} key={'sv-' + i} streamId={i} streamUri={v} />
+              <Grid key={'gsv-' + i} item xs={5}>
+                <StreamView  key={'sv-' + i} streamId={i} streamUri={v} />
+              </Grid>
             )
           })
         }

@@ -10,7 +10,7 @@ import { Body, InventoryThreshold } from ".";
 function StreamView(props) {
 
     return (
-        <Grid container item xs={5} spacing={1}>
+        <Grid container spacing={1}>
             <Body key={'b-' + props.streamId} streamId={props.streamId} streamUri={props.streamUri}/>
             <InventoryThreshold  key={'it-' + props.streamId} streamId={props.streamId} streamUri={props.streamUri}/>
         </Grid>
